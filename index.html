@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>シャドウバース戦績集計ツール</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .input-section {
+            margin-bottom: 20px;
+        }
+        .class-group {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .class-group h3 {
+            margin: 0 0 10px 0;
+            color: #007bff;
+        }
+        button {
+            padding: 8px 12px;
+            margin: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+        }
+        .win-button {
+            background-color: #28a745;
+            color: white;
+        }
+        .win-button:hover {
+            background-color: #1e7e34;
+        }
+        .loss-button {
+            background-color: #dc3545;
+            color: white;
+        }
+        .loss-button:hover {
+            background-color: #a71d2a;
+        }
+        #resetButton {
+            background-color: #dc3545;
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+            display: block;
+            margin: 20px auto;
+        }
+        #resetButton:hover {
+            background-color: #a71d2a;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        tr.total-row {
+            background-color: #e9ecef;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>シャドウバース戦績集計ツール</h1>
+    <div class="input-section">
+        <div class="class-group">
+            <h3>エルフ</h3>
+            <button class="win-button" onclick="recordResult('エルフ', '先攻', '勝利')">先攻勝利</button>
+            <button class="loss-button" onclick="recordResult('エルフ', '先攻', '敗北')">先攻敗北</button>
+            <button class="win-button" onclick="recordResult('エルフ', '後攻', '勝利')">後攻勝利</button>
+            <button class="loss-button" onclick="recordResult('エルフ', '後攻', '敗北')">後攻敗北</button>
+        </div>
+        <div class="class-group">
+            <h3>ロイヤル</h3>
+            <button class="win-button" onclick="recordResult('ロイヤル', '先攻', '勝利')">先攻勝利</button>
+            <button class="loss-button" onclick="recordResult('ロイヤル', '先攻', '敗北')">先攻敗北</button>
+            <button class="win-button" onclick="recordResult('ロイヤル', '後攻', '勝利')">後攻勝利</button>
+            <button class="loss-button" onclick="recordResult('ロイヤル', '後攻', '敗北')">後攻敗北</button>
+        </div>
+        <div class="class-group">
+            <h3>ウィッチ</h3>
+            <button class="win-button" onclick="recordResult('ウィッチ', '先攻', '勝利')">先攻勝利</button>
+            <button class="loss-button" onclick="recordResult('ウィッチ', '先攻', '敗北')">先攻敗北</button>
+            <button class="win-button" onclick="recordResult('ウィッチ', '後攻', '勝利')">後攻勝利</button>
+            <button class="loss-button" onclick="recordResult('ウィッチ', '後攻', '敗北')">後攻敗北</button>
+        </div>
+        <div class="class-group">
+            <h3>ドラゴン</h3>
+            <button class="win-button" onclick="recordResult('ドラゴン', '先攻', '勝利')">先攻勝利</button>
+            <button class="loss-button" onclick="recordResult('ドラゴン', '先攻', '敗北')">先攻敗北</button>
+            <button class="win-button" onclick="recordResult('ドラゴン', '後攻', '勝利')">後攻勝利</button>
+            <button class="loss-button" onclick="recordResult('ドラゴン', '後攻', '敗北')">後攻敗北</button>
+        </div>
+        <div class="class-group">
+            <h3>ナイトメア</h3>
+            <button class="win-button" onclick="recordResult('ナイトメア', '先攻', '勝利')">先攻勝利</button>
+            <button class="loss-button" onclick="recordResult('ナイトメア', '先攻', '敗北')">先攻敗北</button>
+            <button class="win-button" onclick="recordResult('ナイトメア', '後攻', '勝利')">後攻勝利</button>
+            <button class="loss-button" onclick="recordResult('ナイトメア', '後攻', '敗北')">後攻敗北</button>
+        </div>
+        <div class="class-group">
+            <h3>ビショップ</h3>
+            <button class="win-button" onclick="recordResult('ビショップ', '先攻', '勝利')">先攻勝利</button>
+            <button class="loss-button" onclick="recordResult('ビショップ', '先攻', '敗北')">先攻敗北</button>
+            <button class="win-button" onclick="recordResult('ビショップ', '後攻', '勝利')">後攻勝利</button>
+            <button class="loss-button" onclick="recordResult('ビショップ', '後攻', '敗北')">後攻敗北</button>
+        </div>
+        <div class="class-group">
+            <h3>ネメシス</h3>
+            <button class="win-button" onclick="recordResult('ネメシス', '先攻', '勝利')">先攻勝利</button>
+            <button class="loss-button" onclick="recordResult('ネメシス', '先攻', '敗北')">先攻敗北</button>
+            <button class="win-button" onclick="recordResult('ネメシス', '後攻', '勝利')">後攻勝利</button>
+            <button class="loss-button" onclick="recordResult('ネメシス', '後攻', '敗北')">後攻敗北</button>
+        </div>
+        <button id="resetButton" onclick="resetData()">リセット</button>
+    </div>
+    <table id="resultTable">
+        <thead>
+            <tr>
+                <th>クラス</th>
+                <th>先攻勝利</th>
+                <th>先攻敗北</th>
+                <th>後攻勝利</th>
+                <th>後攻敗北</th>
+                <th>総戦績</th>
+                <th>総勝利</th>
+                <th>総敗北</th>
+                <th>勝率</th>
+            </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+    </table>
+
+    <script>
+        // 初期データ
+        const classes = ['エルフ', 'ロイヤル', 'ウィッチ', 'ドラゴン', 'ナイトメア', 'ビショップ', 'ネメシス'];
+        let results = loadData();
+
+        // データの読み込み
+        function loadData() {
+            const savedData = localStorage.getItem('shadowverseResults');
+            if (savedData) {
+                return JSON.parse(savedData);
+            }
+            // 初期データ作成
+            let data = {};
+            classes.forEach(cls => {
+                data[cls] = {
+                    first_wins: 0,
+                    first_losses: 0,
+                    second_wins: 0,
+                    second_losses: 0
+                };
+            });
+            return data;
+        }
+
+        // データの保存
+        function saveData() {
+            localStorage.setItem('shadowverseResults', JSON.stringify(results));
+        }
+
+        // 戦績の記録
+        function recordResult(cls, turn, result) {
+            const key = turn === '先攻' ? (result === '勝利' ? 'first_wins' : 'first_losses') : (result === '勝利' ? 'second_wins' : 'second_losses');
+            results[cls][key] += 1;
+            saveData();
+            updateTable();
+        }
+
+        // テーブルの更新
+        function updateTable() {
+            const tableBody = document.getElementById('tableBody');
+            tableBody.innerHTML = '';
+            let all_first_wins = 0, all_first_losses = 0, all_second_wins = 0, all_second_losses = 0;
+
+            // 各クラスの行を追加
+            classes.forEach(cls => {
+                const { first_wins, first_losses, second_wins, second_losses } = results[cls];
+                all_first_wins += first_wins;
+                all_first_losses += first_losses;
+                all_second_wins += second_wins;
+                all_second_losses += second_losses;
+                const total_wins = first_wins + second_wins;
+                const total_losses = first_losses + second_losses;
+                const total_matches = total_wins + total_losses;
+                const winRate = total_matches > 0 ? ((total_wins / total_matches) * 100).toFixed(2) : '0.00';
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${cls}</td>
+                    <td>${first_wins}</td>
+                    <td>${first_losses}</td>
+                    <td>${second_wins}</td>
+                    <td>${second_losses}</td>
+                    <td>${total_matches}</td>
+                    <td>${total_wins}</td>
+                    <td>${total_losses}</td>
+                    <td>${winRate}%</td>
+                `;
+                tableBody.appendChild(row);
+            });
+
+            // 全クラスの合計行を追加
+            const all_total_wins = all_first_wins + all_second_wins;
+            const all_total_losses = all_first_losses + all_second_losses;
+            const all_total_matches = all_total_wins + all_total_losses;
+            const all_winRate = all_total_matches > 0 ? ((all_total_wins / all_total_matches) * 100).toFixed(2) : '0.00';
+            const totalRow = document.createElement('tr');
+            totalRow.className = 'total-row';
+            totalRow.innerHTML = `
+                <td>全クラス</td>
+                <td>${all_first_wins}</td>
+                <td>${all_first_losses}</td>
+                <td>${all_second_wins}</td>
+                <td>${all_second_losses}</td>
+                <td>${all_total_matches}</td>
+                <td>${all_total_wins}</td>
+                <td>${all_total_losses}</td>
+                <td>${all_winRate}%</td>
+            `;
+            tableBody.appendChild(totalRow);
+        }
+
+        // データリセット
+        function resetData() {
+            if (confirm('戦績データをリセットしますか？')) {
+                results = {};
+                classes.forEach(cls => {
+                    results[cls] = {
+                        first_wins: 0,
+                        first_losses: 0,
+                        second_wins: 0,
+                        second_losses: 0
+                    };
+                });
+                saveData();
+                updateTable();
+            }
+        }
+
+        // 初期表示
+        updateTable();
+    </script>
+</body>
+</html>
