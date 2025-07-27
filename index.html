@@ -84,6 +84,29 @@
             background-color: #e9ecef;
             font-weight: bold;
         }
+        /* 履歴セクションのスタイル */
+        #historySection {
+            margin-top: 30px;
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        #historySection h2 {
+            margin: 0 0 10px 0;
+            color: #333;
+        }
+        #historyList {
+            list-style-type: none;
+            padding: 0;
+        }
+        #historyList li {
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
+        }
+        #historyList li:last-child {
+            border-bottom: none;
+        }
     </style>
 </head>
 <body>
@@ -157,10 +180,17 @@
         <tbody id="tableBody"></tbody>
     </table>
 
+    <!-- 履歴セクションの追加 -->
+    <div id="historySection">
+        <h2>戦績履歴</h2>
+        <ul id="historyList"></ul>
+    </div>
+
     <script>
         // 初期データ
         const classes = ['エルフ', 'ロイヤル', 'ウィッチ', 'ドラゴン', 'ナイトメア', 'ビショップ', 'ネメシス'];
         let results = loadData();
+        let history = loadHistory(); // 履歴データの読み込み
 
         // データの読み込み
         function loadData() {
@@ -168,7 +198,6 @@
             if (savedData) {
                 return JSON.parse(savedData);
             }
-            // 初期データ作成
             let data = {};
             classes.forEach(cls => {
                 data[cls] = {
@@ -181,17 +210,35 @@
             return data;
         }
 
+        // 履歴の読み込み
+        function loadHistory() {
+            const savedHistory = localStorage.getItem('shadowverseHistory');
+            return savedHistory ? JSON.parse(savedHistory) : [];
+        }
+
         // データの保存
         function saveData() {
             localStorage.setItem('shadowverseResults', JSON.stringify(results));
+        }
+
+        // 履歴の保存
+        function saveHistory() {
+            localStorage.setItem('shadowverseHistory', JSON.stringify(history));
         }
 
         // 戦績の記録
         function recordResult(cls, turn, result) {
             const key = turn === '先攻' ? (result === '勝利' ? 'first_wins' : 'first_losses') : (result === '勝利' ? 'second_wins' : 'second_losses');
             results[cls][key] += 1;
+
+            // 履歴に追加（タイムスタンプ付き）
+            const timestamp = new Date().toLocaleString('ja-JP');
+            history.push({ class: cls, turn: turn, result: result, timestamp: timestamp });
+            
             saveData();
+            saveHistory();
             updateTable();
+            updateHistory();
         }
 
         // テーブルの更新
@@ -200,7 +247,6 @@
             tableBody.innerHTML = '';
             let all_first_wins = 0, all_first_losses = 0, all_second_wins = 0, all_second_losses = 0;
 
-            // 各クラスの行を追加
             classes.forEach(cls => {
                 const { first_wins, first_losses, second_wins, second_losses } = results[cls];
                 all_first_wins += first_wins;
@@ -226,7 +272,6 @@
                 tableBody.appendChild(row);
             });
 
-            // 全クラスの合計行を追加
             const all_total_wins = all_first_wins + all_second_wins;
             const all_total_losses = all_first_losses + all_second_losses;
             const all_total_matches = all_total_wins + all_total_losses;
@@ -247,9 +292,20 @@
             tableBody.appendChild(totalRow);
         }
 
+        // 履歴の更新
+        function updateHistory() {
+            const historyList = document.getElementById('historyList');
+            historyList.innerHTML = '';
+            history.forEach(entry => {
+                const li = document.createElement('li');
+                li.textContent = `${entry.timestamp}: ${entry.class} - ${entry.turn} ${entry.result}`;
+                historyList.appendChild(li);
+            });
+        }
+
         // データリセット
         function resetData() {
-            if (confirm('戦績データをリセットしますか？')) {
+            if (confirm('戦績データと履歴をリセットしますか？')) {
                 results = {};
                 classes.forEach(cls => {
                     results[cls] = {
@@ -259,13 +315,17 @@
                         second_losses: 0
                     };
                 });
+                history = []; // 履歴もリセット
                 saveData();
+                saveHistory();
                 updateTable();
+                updateHistory();
             }
         }
 
         // 初期表示
         updateTable();
+        updateHistory();
     </script>
 </body>
 </html>
